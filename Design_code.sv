@@ -3,12 +3,12 @@
 
 module traffic_signal (input rst, clk, traffic, output reg [1:0]signal);
   
-Declare the Parameters and Internal signals
+// Declare the Parameters and Internal signals
   parameter RED = 2'b00, YELLOW = 2'b01, GREEN = 2'b10;
   
   reg [1:0] pr_state, nxt_state;
   
-Workflow of FSM
+// Workflow of FSM
   always @(posedge clk) begin
     
     if (rst) pr_state <= RED;
