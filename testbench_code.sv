@@ -1,39 +1,35 @@
 // Testbench
 
+`timescale 1s/1ms
+
 module tb;
   
   //Declare Ports
-  reg clk, rst, traffic;
+  reg clk, rstn, traffic;
   wire [1:0] signal;
   
   //Instantiate Design Module
-  traffic_signal dut(rst,clk,traffic,signal);
+  traffic_signal dut(rstn,clk,traffic,signal);
   
   //Generate a Clock of timeperiod 10 second
   always #5 clk = ~ clk;
   
   //Create a task to Reset the Design Module
   task reset();
-    rst <= 1'b1;
+    rstn <= 1'b0;
     repeat(3) @(posedge clk);
-    rst <= 1'b0;
+    rstn <= 1'b1;
     $display("Reset Done !");
   endtask
   
   //Generate stimuli
   initial begin
-    clk = 1'b0;
+    clk = 1'b0; rstn <= 0; traffic <= 0;
     @(posedge clk);
     reset();
-    forever begin
-      traffic = $urandom();
-      @(posedge clk);
-    end
+    traffic = 1;
+    repeat(30) @(posedge clk);
+    $finish(); 
   end
-  
-  //Generate Waveform
-  initial begin 
-    $dumpfile("dump.vcd");
-    $dumpvars;
-    #2000 $finish();
-  end
+
+endmodule
